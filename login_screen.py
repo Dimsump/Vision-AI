@@ -13,8 +13,8 @@ from admin_app import AdminApp
 USER_DATA_FILE = "user.json"
 
 class LoginScreen:
-    def __init__(self):
-        self.window = tk.Tk()
+    def __init__(self, master=None):
+        self.window = master or tk.Tk()
         self.window.title("Face Login System")
         self.window.geometry("900x600")
         self.window.resizable(False, False)

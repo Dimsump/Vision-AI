@@ -64,6 +64,24 @@ class MainApp:
         self.update_frame()
         self.update_time()
 
+    def tao_ten_file_hanh_trinh(self):
+        now = datetime.datetime.now()
+        folder = os.path.join("db", self.user_name, "journey")
+        os.makedirs(folder, exist_ok=True)
+
+        # Tạo tên cơ bản theo ngày tháng năm
+        ten_co_ban = f"hanh_trinh_{now.day}_{now.month}_{now.year}"
+
+        # Kiểm tra xem file đã tồn tại hay chưa để tự động tăng số thứ tự
+        index = 1
+        ten_file = f"{ten_co_ban}_{index}.avi"
+        while os.path.exists(os.path.join(folder, ten_file)):
+            index += 1
+            ten_file = f"{ten_co_ban}_{index}.avi"
+
+        return ten_file
+
+    
     def update_time(self):
         now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         self.time_label.config(text=now)
@@ -101,7 +119,7 @@ class MainApp:
     def start_recording(self):
         folder = os.path.join("db", self.user_name, "journey")
         os.makedirs(folder, exist_ok=True)
-        filename = datetime.datetime.now().strftime("%Y%m%d_%H%M%S") + "_hanhtrinh.avi"
+        filename = self.tao_ten_file_hanh_trinh()
         self.video_path = os.path.join(folder, filename)
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         self.video_writer = cv2.VideoWriter(self.video_path, fourcc, 20.0, (640, 480))
@@ -175,13 +193,25 @@ class MainApp:
         listbox.bind("<Double-Button-1>", play_video)
 
     def show_profile(self):
-        profile_path = os.path.join("db", f"{self.user_name}.pickle")
-        if not os.path.exists(profile_path):
-            messagebox.showinfo("Thông báo", "Chưa có thông tin hồ sơ.")
-            return
+        profile_path = os.path.join("db", f"{self.user_name}_profile.pickle")
+        data = {}
 
-        with open(profile_path, "rb") as f:
-            data = pickle.load(f)
+        if os.path.exists(profile_path):
+            try:
+                with open(profile_path, "rb") as f:
+                    data = pickle.load(f)
+                if not isinstance(data, dict):
+                    raise ValueError("Hồ sơ không đúng định dạng")
+            except Exception as e:
+                messagebox.showerror("Lỗi", f"Lỗi khi đọc hồ sơ: {e}")
+                return
+        else:
+            data = {
+                "name": self.user_name,
+                "phone": "",
+                "email": "",
+                "alert_sound": ""
+            }
 
         top = tk.Toplevel(self.master)
         top.title("Hồ sơ người dùng")
@@ -199,14 +229,10 @@ class MainApp:
         def choose_alert():
             file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.mp3 *.wav")])
             if file_path:
-                if "alert_sound" not in fields:
-                    fields["alert_sound"] = tk.Entry(top, width=40)
-                    fields["alert_sound"].grid(row=row, column=1, padx=10, pady=5)
                 fields["alert_sound"].delete(0, tk.END)
                 fields["alert_sound"].insert(0, file_path)
 
-        btn_alert = tk.Button(top, text="🔊 Chọn chuông cảnh báo", command=choose_alert)
-        btn_alert.grid(row=row, column=1, pady=5, sticky="w")
+        tk.Button(top, text="🔊 Chọn chuông cảnh báo", command=choose_alert).grid(row=row, column=1, pady=5, sticky="w")
 
         def save_changes():
             for key in fields:
