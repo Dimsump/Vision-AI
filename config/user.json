@@ -1,0 +1,30 @@
+{
+  "trung": {
+    "role": "user",
+    "supervisor": "trung"
+  },
+  "tai_xe_a": {
+    "role": "driver",
+    "supervisor": "trung"
+  },
+  "n": {
+    "role": "driver",
+    "supervisor": "n"
+  },
+  "l": {
+    "role": "driver",
+    "supervisor": "l"
+  },
+  "t": {
+    "role": "driver",
+    "supervisor": "t"
+  },
+  "trung1": {
+    "role": "driver",
+    "supervisor": "trung1"
+  },
+  "tttttt": {
+    "role": "driver",
+    "supervisor": "tttttt"
+  }
+}
