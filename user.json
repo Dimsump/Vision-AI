@@ -1,0 +1,14 @@
+{
+  "b": {
+    "role": "driver",
+    "supervisor": "b"
+  },
+  "a": {
+    "role": "driver",
+    "supervisor": "a"
+  },
+  "v": {
+    "role": "driver",
+    "supervisor": "v"
+  }
+}

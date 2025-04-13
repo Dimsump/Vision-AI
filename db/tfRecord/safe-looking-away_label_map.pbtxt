@@ -1,0 +1,15 @@
+item {
+    name: "drinking",
+    id: 1,
+    display_name: "drinking"
+}
+item {
+    name: "looking_away",
+    id: 2,
+    display_name: "looking_away"
+}
+item {
+    name: "safe_driving",
+    id: 3,
+    display_name: "safe_driving"
+}
